@@ -1,0 +1,5 @@
+requests
+beautifulsoup4
+gitpython
+colorama
+tkinter
