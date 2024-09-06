@@ -3,9 +3,6 @@ import requests
 from bs4 import BeautifulSoup
 from git import Repo
 from colorama import Fore, Style, init
-import tkinter as tk
-from tkinter import messagebox
-import threading
 import logging
 import subprocess
 
@@ -83,22 +80,9 @@ def update_script():
         print(Fore.RED + f"Failed to update the script: {e}")
         logging.error(f"Failed to update the script: {e}")
 
-def start_download():
-    try:
-        download_site_files(SITE_URL, DOWNLOAD_DIR)
-        upload_to_github(DOWNLOAD_DIR, REPO_NAME, GITHUB_TOKEN, GITHUB_USERNAME, COMMIT_MESSAGE)
-        messagebox.showinfo("Success", "Download and upload completed successfully!")
-    except Exception as e:
-        logging.error(f"Error: {e}")
-        messagebox.showerror("Error", f"An error occurred: {e}")
-
 def main_menu():
-    root = tk.Tk()
-    root.title("DEDSEC SITE DOWNLOADER V1.0")
-
-    tk.Label(root, text="DEDSEC SITE DOWNLOADER V1.0", font=("Arial", 16)).pack(pady=10)
-    tk.Label(root, text="DEV : FAMOUS-TECH", font=("Arial", 12)).pack(pady=5)
-    tk.Label(root, text="DON’T USE FOR MALICIOUS ACTIONS", font=("Arial", 12)).pack(pady=5)
+    clear_screen()
+    print_banner()
 
     global SITE_URL, GITHUB_TOKEN, GITHUB_USERNAME, REPO_NAME, COMMIT_MESSAGE
     SITE_URL = input(Fore.CYAN + "Enter the site URL to download: ")
@@ -107,11 +91,23 @@ def main_menu():
     REPO_NAME = input(Fore.CYAN + "Enter the repository name: ")
     COMMIT_MESSAGE = input(Fore.CYAN + "Enter the commit message: ")
 
-    tk.Button(root, text="Start Downloading", command=lambda: threading.Thread(target=start_download).start()).pack(pady=10)
-    tk.Button(root, text="Update the Script", command=update_script).pack(pady=10)
-    tk.Button(root, text="Exit", command=root.quit).pack(pady=10)
+    while True:
+        print("\nOptions:")
+        print("1. Start Downloading")
+        print("2. Update the Script")
+        print("3. Exit")
+        choice = input(Fore.CYAN + "Choose an option: ")
 
-    root.mainloop()
+        if choice == '1':
+            download_site_files(SITE_URL, DOWNLOAD_DIR)
+            upload_to_github(DOWNLOAD_DIR, REPO_NAME, GITHUB_TOKEN, GITHUB_USERNAME, COMMIT_MESSAGE)
+            print(Fore.GREEN + "Download and upload completed successfully!")
+        elif choice == '2':
+            update_script()
+        elif choice == '3':
+            break
+        else:
+            print(Fore.RED + "Invalid option. Please try again.")
 
 if __name__ == "__main__":
     main_menu()
