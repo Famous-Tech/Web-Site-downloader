@@ -66,6 +66,3 @@ This script is provided as-is, without any warranty. Use it responsibly and in a
 ---
 
 **Note:** Always ensure you have the right to download and use the content from the websites you target. Unauthorized use of this script may violate legal terms and conditions.
-```
-
-This structure ensures that the project is organized and easy to manage, with clear instructions on how to use it.
