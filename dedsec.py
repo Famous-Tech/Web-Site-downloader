@@ -51,7 +51,14 @@ def download_site_files(url, folder):
         try:
             file_response = requests.get(file_url)
             file_response.raise_for_status()  # Raise an HTTPError for bad responses
+            
+            # Extract the file name from the URL
             file_name = os.path.join(folder, file_url.split('/')[-1])
+            
+            # Check if the file name is too long and truncate it if necessary
+            if len(file_name) > 255:  # 255 is a common limit for file names
+                file_name = os.path.join(folder, file_url.split('/')[-1][:255 - len(folder) - 1])
+
             with open(file_name, 'wb') as f:
                 f.write(file_response.content)
             print(Fore.YELLOW + f"Downloaded: {file_name}")
@@ -59,6 +66,9 @@ def download_site_files(url, folder):
         except requests.exceptions.RequestException as e:
             print(Fore.RED + f"Failed to download: {file_url} - {e}")
             logging.error(f"Failed to download: {file_url} - {e}")
+        except OSError as e:
+            print(Fore.RED + f"Failed to save file: {file_name} - {e}")
+            logging.error(f"Failed to save file: {file_name} - {e}")
 
 def upload_to_github(folder, repo_name, github_token, github_username, commit_message):
     repo_url = f'https://{github_token}@github.com/{github_username}/{repo_name}.git'
